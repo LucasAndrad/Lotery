@@ -26,21 +26,22 @@ typedef struct {
 // list of functions
 void setValueNumbers(Info *lot);
 int countLines();
+void showInfo(Info *lot);
 
 int main() {
  
 	int lines=0;
   lines = countLines();
-  Info lottery[numbersGame];
-  setValueNumbers(lottery[numbersGame]);
+  cout << "Lines = " << lines << endl;
+  Info *lottery = (Info *) malloc(sizeof(Info)*numbersGame);
+  setValueNumbers(lottery);
   int n;
-	results = fopen("teste.csv", "r");
+	results = fopen("dados.csv", "r");
 	while (fscanf(results, "%d ", &n) != EOF) { 
 		lottery[n].count++;
-		lottery[n].percent = (lottery[n].count/lines) * 100.0;
-		printf ("Number: %d  Times: %d  Percent: %.03lf\n", lottery[n].number, lottery[n].count, lottery[n].percent);
+		lottery[n].percent = ((lottery[n].count*100.0)/lines);
 	}
-	
+	showInfo(lottery);
 	return 0;
 
 }
@@ -48,7 +49,7 @@ int main() {
 int countLines() {
 	int l=0;
 	char w;
-	results = fopen("teste.csv", "r");
+	results = fopen("dados.csv", "r");
 	w = fgetc(results);
 	while (w!=EOF) {
 		w = fgetc(results);
@@ -60,10 +61,28 @@ int countLines() {
 	return l;
 }
 
+// set value to numbers of struct
 void setValueNumbers(Info *lot) {
 
 	int i=0;
-	for (i=0; i<100; i++) {
+	for (i=0; i<numbersGame; i++) {
 		lot[i].number = i;
+		lot[i].count = 0;
+		lot[i].percent = 0;
 	}
 }
+
+// show the numbers and their information
+void showInfo(Info *lot) {
+	
+	int i=0;
+	for(i=0; i<numbersGame; i++) {
+		printf ("Number: %d  Times: %d  Percent: %.03lf\n", lot[i].number, lot[i].count, lot[i].percent);
+	}
+}
+
+
+
+
+
+
