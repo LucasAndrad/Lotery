@@ -14,11 +14,16 @@ Operational System LINUX - UBUNTU 15.04
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#define numbersGame 100
+
 using namespace std;
+
+int numbersGame = 100;
 
 FILE *results;
 FILE *infoResults;
+
+string resultsFile;
+string infoFile;
 
 // struct to save numbers information
 typedef struct {
@@ -26,13 +31,14 @@ typedef struct {
 	int number;
 	int count;
 	double percent;
-}Info;
+} Info;
 
 // list of functions
 void setValueNumbers(Info *lot);
-int countLines();
+int countLines(string fName);
 string getGameName();
-void getNumbersInfo(Info *lot, int linesCount);
+string setFileName(string gameName);
+void getNumbersInfo(Info *lot, int linesCount, string fName);
 void orderByCount(Info* lot);
 void putInfoInFile(Info* lot, int linesCount, string gameName);
 void showInfo(Info *lot, int linesCount);
@@ -41,12 +47,13 @@ void showInfo(Info *lot, int linesCount);
 int main() {
  
 	int lines=0;
-  lines = countLines();
-  string nameGame;
+  string nameGame, fileName;
   nameGame = getGameName();
+  fileName = setFileName(nameGame);
+  lines = countLines(fileName);
   Info *lottery = (Info *) malloc(sizeof(Info)*numbersGame);
   setValueNumbers(lottery);
-	getNumbersInfo(lottery, lines);
+	getNumbersInfo(lottery, lines, fileName);
 	orderByCount(lottery);
 	putInfoInFile(lottery, lines, nameGame);
 	cout << "Para ver o resultado basta abrir o arquivo dataFile.txt para visualizar os dados\n";
@@ -55,10 +62,10 @@ int main() {
 
 }
 // function to count number of lines in file
-int countLines() {
+int countLines(string fName) {
 	int l=0;
 	char w;
-	results = fopen("dados.csv", "r");
+	results = fopen(fName.c_str(), "r");
 	w = fgetc(results);
 	while (w!=EOF) {
 		w = fgetc(results);
@@ -81,6 +88,18 @@ void setValueNumbers(Info *lot) {
 	}
 }
 
+// set what file will be used
+string setFileName(string gameName) {
+
+	if (gameName == "Lotomania" || gameName == "lotomania") {
+		resultsFile = "dadosLotomania.csv";
+	}
+	else {
+	
+	}
+	return resultsFile;		
+}
+
 // get the game name of lottery
 string getGameName() {
 	
@@ -91,10 +110,10 @@ string getGameName() {
 }
 
 // get count and percent of all numbers game
-void getNumbersInfo(Info *lot, int linesCount) {
+void getNumbersInfo(Info *lot, int linesCount, string fName) {
 
 	int n;
-	results = fopen("dados.csv", "r");
+	results = fopen(fName.c_str(), "r");
 	while (fscanf(results, "%d ", &n) != EOF) { 
 		lot[n].count++;
 		lot[n].percent = ((lot[n].count*100.0)/linesCount);
