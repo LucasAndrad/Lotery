@@ -14,6 +14,7 @@ number has appeared in specific lottery game of Brasil.
 using namespace std;
 
 FILE *results;
+FILE *infoResults;
 
 // struct to save numbers information
 typedef struct {
@@ -26,8 +27,10 @@ typedef struct {
 // list of functions
 void setValueNumbers(Info *lot);
 int countLines();
+void getNumbersInfo(Info *lot, int linesCount);
 void showInfo(Info *lot);
 
+// function main begin here
 int main() {
  
 	int lines=0;
@@ -35,12 +38,7 @@ int main() {
   cout << "Lines = " << lines << endl;
   Info *lottery = (Info *) malloc(sizeof(Info)*numbersGame);
   setValueNumbers(lottery);
-  int n;
-	results = fopen("dados.csv", "r");
-	while (fscanf(results, "%d ", &n) != EOF) { 
-		lottery[n].count++;
-		lottery[n].percent = ((lottery[n].count*100.0)/lines);
-	}
+	getNumbersInfo(lottery, lines);
 	showInfo(lottery);
 	return 0;
 
@@ -70,6 +68,18 @@ void setValueNumbers(Info *lot) {
 		lot[i].count = 0;
 		lot[i].percent = 0;
 	}
+}
+
+// get count and percent of all numbers game
+void getNumbersInfo(Info *lot, int linesCount) {
+
+	int n;
+	results = fopen("dados.csv", "r");
+	while (fscanf(results, "%d ", &n) != EOF) { 
+		lot[n].count++;
+		lot[n].percent = ((lot[n].count*100.0)/linesCount);
+	}
+	fclose(results);
 }
 
 // show the numbers and their information
