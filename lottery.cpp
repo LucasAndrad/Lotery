@@ -93,6 +93,15 @@ string setFileName(string gameName) {
 
 	if (gameName == "Lotomania" || gameName == "lotomania") {
 		resultsFile = "dadosLotomania.csv";
+		numbersGame = 100;
+	}
+	else if (gameName == "Lotofacil" || gameName == "lotofacil") {
+		resultsFile = "dadosLotofacil.csv";
+		numbersGame = 26;
+	}
+	else if (gameName == "Mega" || gameName == "mega") {
+		resultsFile = "dadosMega.csv";
+		numbersGame = 61;
 	}
 	else {
 	
